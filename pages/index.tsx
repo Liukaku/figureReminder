@@ -11,28 +11,55 @@ const Home: NextPage = () => {
   const [remind, updateRemind] = useState("");
   const [url, updateURL] = useState("");
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const state = {
       title: title,
       email: email,
-      release: release,
-      remind: remind,
+      release: new Date(release).getTime(),
+      remind: new Date(remind).getTime(),
       url: url,
     };
     console.log(state);
-    fetch(
-      `http://localhost:5001/anime-figures-7122a/europe-west2/api/test?url=https://www.gamersheek.co.uk/good-smile-company-c779/scale-figures-c1038/1-7-scale-c1049/falslander-1-7-scale-samurai-p14238`
-    )
-      .then((res) => {
-        return res.json();
-      })
-      .then((val) => {
-        console.log(val);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    const query = `https://www.gamersheek.co.uk/good-smile-company-c779/scale-figures-c1038/1-7-scale-c1049/falslander-1-7-scale-samurai-p14238`;
+    const request = await fetch(
+      `http://localhost:5001/anime-figures-7122a/europe-west2/api/newAdd`,
+      {
+        method: `POST`,
+        body: JSON.stringify(state),
+      }
+    );
+    const status = request.status;
+    const res = await request.json();
+    switch (status) {
+      case 500:
+        console.error(res);
+        break;
+      case 200:
+        console.log(res);
+      default:
+        console.log(res);
+        break;
+    }
+  };
+
+  const getData = async () => {
+    console.log("beep");
+    const request = await fetch(
+      "http://localhost:5001/anime-figures-7122a/europe-west2/api/getReminder"
+    );
+    const status = request.status;
+    const res = await request.json();
+    switch (status) {
+      case 500:
+        console.error(res);
+        break;
+      case 200:
+        console.log(res);
+      default:
+        console.log(res);
+        break;
+    }
   };
   return (
     <div className="">
@@ -113,6 +140,14 @@ const Home: NextPage = () => {
               value="Submit"
             />
           </form>
+          <button
+            onClick={() => {
+              getData();
+            }}
+            className="mt-5 cursor-pointer font-bold border border-white rounded-sm w-full text-center bg-zinc-800 hover:bg-zinc-600 active:bg-zinc-400 ease-in-out duration-200 hover:-translate-y-1 active:translate-y-0.5 hover:drop-shadow-[0_5px_5px_rgba(255,255,255,0.3)]"
+          >
+            Get
+          </button>
           <div className="w-1/4 mx-auto mt-5">
             <img src={url} alt="" />
           </div>
