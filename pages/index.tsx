@@ -21,6 +21,18 @@ const Home: NextPage = () => {
       url: url,
     };
     console.log(state);
+    fetch(
+      `http://localhost:5001/anime-figures-7122a/europe-west2/api/test?url=https://www.gamersheek.co.uk/good-smile-company-c779/scale-figures-c1038/1-7-scale-c1049/falslander-1-7-scale-samurai-p14238`
+    )
+      .then((res) => {
+        return res.json();
+      })
+      .then((val) => {
+        console.log(val);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
   return (
     <div className="">
